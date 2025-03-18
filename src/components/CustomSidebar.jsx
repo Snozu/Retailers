@@ -17,7 +17,7 @@ const menuItems = [
       {
         label: "Clientes Finales",
         icon: Users,
-        href: "/solicitudes/clientes-finales",
+        href: "/dashboard/clientes-finales",
       },
       {
         label: "Retailers",
@@ -26,12 +26,12 @@ const menuItems = [
           {
             label: "Walmart",
             icon: Truck,
-            href: "/solicitudes/retailers/walmart",
+            href: "/dashboard/retailers/walmart",
           },
           {
             label: "Elektra",
             icon: Box,
-            href: "/solicitudes/retailers/elektra",
+            href: "/dashboard/retailers/elektra",
           },
         ],
       },
@@ -91,7 +91,7 @@ function CustomSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-[#09090b]   border-r p-4">
+    <aside className="w-64 bg-[#09090b] border-r border-gray-700 p-4">
       {/* Sección de Perfil */}
       <div className="flex items-center space-x-4 mb-6">
         <img
