@@ -63,6 +63,7 @@ function Login() {
 
             {/* BOTÓN: HOVER EN ROJO */}
             <button
+            
               type="submit"
               className="bg-black text-white w-full py-2 rounded 
                          hover:bg-red-600 transition-colors"

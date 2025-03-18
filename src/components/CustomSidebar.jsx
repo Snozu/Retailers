@@ -1,47 +1,112 @@
 // src/components/CustomSidebar.jsx
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-// Si ya tienes una función para concatenar clases, puedes usarla, o alternativamente "clsx"
-// import { cn } from "@/lib/utils";
+import { Home, FileText, Users, ShoppingBag, Truck, Box } from "lucide-react";
+import profileImage from "../assets/TVS-LOGO-RGB-300DPI.jpg";
+
+const menuItems = [
+  {
+    label: "Dashboard",
+    icon: Home,
+    href: "/dashboard",
+  },
+  {
+    label: "Solicitudes",
+    icon: FileText,
+    children: [
+      {
+        label: "Clientes Finales",
+        icon: Users,
+        href: "/solicitudes/clientes-finales",
+      },
+      {
+        label: "Retailers",
+        icon: ShoppingBag,
+        children: [
+          {
+            label: "Walmart",
+            icon: Truck,
+            href: "/solicitudes/retailers/walmart",
+          },
+          {
+            label: "Elektra",
+            icon: Box,
+            href: "/solicitudes/retailers/elektra",
+          },
+        ],
+      },
+    ],
+  },
+];
 
 function CustomSidebar() {
+  // Estado para manejar la expansión de submenús
+  const [expanded, setExpanded] = useState({});
+
+  const toggleExpand = (label) => {
+    setExpanded((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
+
+  // Función recursiva para renderizar el menú
+  const renderMenuItems = (items, depth = 0) => {
+    return (
+      <ul className={depth === 0 ? "space-y-2" : "pl-4 space-y-1"}>
+        {items.map((item) => {
+          const Icon = item.icon;
+          const hasChildren = item.children && item.children.length > 0;
+          return (
+            <li key={item.label}>
+              <div className="flex items-center justify-between">
+                <Link
+                  to={item.href || "#"}
+                  className="flex items-center space-x-2 p-2 rounded hover:bg-gray-800 transition-colors text-white"
+                  onClick={(e) => {
+                    if (hasChildren) {
+                      e.preventDefault();
+                      toggleExpand(item.label);
+                    }
+                  }}
+                >
+                  {Icon && <Icon className="w-5 h-5" />}
+                  <span className="text-sm">{item.label}</span>
+                </Link>
+                {hasChildren && (
+                  <button
+                    onClick={() => toggleExpand(item.label)}
+                    className="p-1 text-gray-300 hover:text-gray-200"
+                  >
+                    {expanded[item.label] ? "-" : "+"}
+                  </button>
+                )}
+              </div>
+              {hasChildren && expanded[item.label] && renderMenuItems(item.children, depth + 1)}
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 p-4">
-      
+    <aside className="w-64 bg-[#09090b]   border-r p-4">
       {/* Sección de Perfil */}
       <div className="flex items-center space-x-4 mb-6">
         <img
+          src={profileImage}
           alt="Perfil"
           className="w-12 h-12 rounded-full"
         />
         <div>
-          <p className="font-semibold">Nombre del Usuario</p>
-          <p className="text-sm text-gray-500">Rol o Información</p>
+          <p className="font-semibold text-white">Nombre del Usuario</p>
+          <p className="text-sm text-gray-400">Rol o información</p>
         </div>
       </div>
-      
+
       {/* Menú de Navegación */}
-      <nav>
-        <ul className="space-y-2">
-          <li>
-            <Link
-              to="/dashboard"
-              className="block p-2 rounded hover:bg-gray-100 transition-colors"
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/solicitudes"
-              className="block p-2 rounded hover:bg-gray-100 transition-colors"
-            >
-              Solicitudes
-            </Link>
-          </li>
-          {/* Agrega más ítems si lo necesitas */}
-        </ul>
-      </nav>
+      <nav>{renderMenuItems(menuItems)}</nav>
     </aside>
   );
 }
