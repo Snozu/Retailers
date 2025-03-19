@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ClienteFinalTable from "../../../components/ClienteFinalTable";
-import SummaryAlerts from "../../../components/Alert";
+import SummaryAlerts from "../../../components/SolicitudesCard";
 import ClienteFinalModal from "../../../components/ClienteFinalModal";
 import SearchBar from "../../../components/SearchBar";
 import Pagination from "../../../components/Pagination"; // <-- Importamos el nuevo Pagination
