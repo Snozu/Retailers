@@ -1,24 +1,26 @@
 // src/components/CustomSidebar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Home, FileText, Users, ShoppingBag, Truck, Box } from "lucide-react";
+import { LayoutDashboard, ChartColumnBig, Users, ShoppingBag, Truck, Box } from "lucide-react";
 import profileImage from "../assets/TVS-LOGO-RGB-300DPI.jpg";
 
 const menuItems = [
   {
     label: "Dashboard",
-    icon: Home,
+    icon: LayoutDashboard,
     href: "/dashboard",
   },
   {
     label: "Solicitudes",
-    icon: FileText,
+    icon: ChartColumnBig,
     children: [
       {
         label: "Clientes Finales",
         icon: Users,
-        href: "/solicitudes/clientes-finales",
+        href: "/dashboard/solicitudes/clientes-finales",
       },
+      
+      
       {
         label: "Retailers",
         icon: ShoppingBag,
@@ -26,13 +28,14 @@ const menuItems = [
           {
             label: "Walmart",
             icon: Truck,
-            href: "/solicitudes/retailers/walmart",
+            href: "/dashboard/solicitudes/retailers/walmart",
           },
           {
             label: "Elektra",
             icon: Box,
-            href: "/solicitudes/retailers/elektra",
+            href: "/dashboard/solicitudes/retailers/elektra",
           },
+          
         ],
       },
     ],
@@ -91,7 +94,7 @@ function CustomSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-[#09090b]   border-r p-4">
+    <aside className="w-64 bg-[#09090b] border-r p-4">
       {/* Sección de Perfil */}
       <div className="flex items-center space-x-4 mb-6">
         <img
