@@ -2,10 +2,30 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-
 const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
   const [formData, setFormData] = useState({ ...request });
   const [loading, setLoading] = useState(false);
+
+  // Función para transformar los datos del frontend al formato esperado por el backend
+  const transformData = (data) => ({
+    user_id: data.user_id,
+    nombre_completo: data.full_name,
+    correo: data.email,
+    telefono: data.phone_number,
+    fecha_nacimiento: data.birthday,
+    calle: data.street,
+    numero_exterior: data.exterior_number,
+    numero_interior: data.interior_number,
+    colonia: data.neighborhood,
+    ciudad: data.city,
+    estado: data.state,
+    codigo_postal: data.zip,
+    vin: data.vin,
+    invoice: data.invoice,
+    modelo: data.modelo,
+    anio: data.anio,
+    retailer: data.retailer,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,7 +36,10 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
     setLoading(true);
     try {
       const apiUrl = import.meta.env.VITE_API_CLIENT_UPDATE;
-      await axios.post(`${apiUrl}/update-client-data`, formData);
+      console.log("apiUrl:", apiUrl); // Verifica el valor en consola
+      // Transformamos los datos antes de enviarlos
+      const payload = transformData(formData);
+      await axios.post(`${apiUrl}/client-update`, payload);
       alert("Datos actualizados correctamente.");
       onClose();
     } catch (error) {
@@ -64,16 +87,11 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
         </button>
 
         {/* Encabezado */}
-        <div className="px-6 py-6">
-        </div>
-
+        <div className="px-6 py-6"></div>
 
         <div className="px-6 py-6 text-black text-sm">
-
-
           <section className="mb-6">
             <h4 className="text-sm font-bold uppercase mb-3">Datos Personales</h4>
-
             <div className="grid grid-cols-4 gap-x-8 gap-y-4">
               {[
                 ["Nombre", "full_name"],
@@ -109,7 +127,6 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
           {/* DETALLES DE VENTA */}
           <section className="mb-6">
             <h4 className="text-sm font-bold uppercase mb-3">Detalles de Venta</h4>
-
             <div className="grid grid-cols-2 gap-x-8 gap-y-4">
               {[
                 ["Promoción", "promocion"],
@@ -136,7 +153,6 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
           </section>
 
           <div className="flex items-center justify-between mt-8">
-
             <a
               href="#"
               className="text-sm text-[#989898] font-semibold underline hover:no-underline"
@@ -175,7 +191,7 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
                 Rechazar
               </button>
 
-              {/* Aprobar:*/}
+              {/* Aprobar: */}
               <button
                 onClick={() => handleApproveReject('approved')}
                 disabled={loading}
