@@ -8,7 +8,7 @@ function DashboardLayout() {
     <div className="flex h-screen">
       <CustomSidebar />
       <div className="flex-1">
-        {/* En lugar de <MainContent />, pon <Outlet /> */}
+
         <Outlet />
       </div>
     </div>

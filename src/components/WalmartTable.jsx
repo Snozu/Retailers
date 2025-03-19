@@ -1,10 +1,9 @@
-// src/components/ClienteFinalTable.jsx
+// src/components/WalmartTable.jsx
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"; 
 import { PlusIcon } from "lucide-react";
 
-const ClienteFinalTable = ({ data, onShowDetails }) => {
-
+const WalmartTable = ({ data, onShowDetails }) => {
 
   const renderStatus = (status) => {
     let bgColor = "";
@@ -26,6 +25,7 @@ const ClienteFinalTable = ({ data, onShowDetails }) => {
         bgColor = "bg-gray-400";
         text = "Desconocido";
     }
+
     return (
       <div className="flex items-center gap-2">
         <span className={`inline-block w-2.5 h-2.5 rounded-full ${bgColor}`} />
@@ -39,12 +39,12 @@ const ClienteFinalTable = ({ data, onShowDetails }) => {
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="border-gray-200 text-sm text-gray-600 bg-gray-50">
-            <th className="py-3 px-4 font-semibold">Nombre Completo</th>
-            <th className="py-3 px-4 font-semibold">Celular</th>
-            <th className="py-3 px-4 font-semibold">Email</th>
-            <th className="py-3 px-4 font-semibold">Ciudad</th>
-            <th className="py-3 px-4 font-semibold">Estatus</th>
-            <th className="py-3 px-4 font-semibold text-center">Información</th>
+            <th className="p-4">Nombre Completo</th>
+            <th className="p-4">Celular</th>
+            <th className="p-4">Email</th>
+            <th className="p-4">Ciudad</th>
+            <th className="p-4">Estatus</th>
+            <th className="p-4 text-center">Información</th>
           </tr>
         </thead>
         <tbody className="text-sm text-gray-700">
@@ -54,12 +54,12 @@ const ClienteFinalTable = ({ data, onShowDetails }) => {
                 key={`${request.user_id}-${index}`}
                 className="border-b border-gray-100 hover:bg-gray-50"
               >
-                <td className="py-3 px-4">{request.full_name || "N/A"}</td>
-                <td className="py-3 px-4">{request.phone_number || "N/A"}</td>
-                <td className="py-3 px-4">{request.email || "N/A"}</td>
-                <td className="py-3 px-4">{request.city || "N/A"}</td>
-                <td className="py-3 px-4">{renderStatus(request.status)}</td>
-                <td className="py-3 px-4 text-center">
+                <td className="p-4">{request.full_name || "N/A"}</td>
+                <td className="p-4">{request.phone_number || "N/A"}</td>
+                <td className="p-4">{request.email || "N/A"}</td>
+                <td className="p-4">{request.city || "N/A"}</td>
+                <td className="p-4">{renderStatus(request.status)}</td>
+                <td className="p-4 text-center">
                   <Button
                     variant="ghost"
                     size="icon"
@@ -85,4 +85,4 @@ const ClienteFinalTable = ({ data, onShowDetails }) => {
   );
 };
 
-export default ClienteFinalTable;
+export default WalmartTable;

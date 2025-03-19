@@ -17,13 +17,13 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
     }
   };
 
-  // Generamos un array con las páginas a mostrar (aquí mostramos todas, pero podrías ajustar la lógica si hay muchas páginas)
   const pagesArray = [];
   for (let i = 1; i <= totalPages; i++) {
     pagesArray.push(i);
   }
 
   return (
+    
     <div className="flex items-center gap-2">
       <button
         onClick={handlePrevious}

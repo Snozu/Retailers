@@ -1,7 +1,14 @@
 // src/components/CustomSidebar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { LayoutDashboard, ChartColumnBig, Users, ShoppingBag, Truck, Box } from "lucide-react";
+import {
+  LayoutDashboard,
+  ChartColumnBig,
+  Users,
+  ShoppingBag,
+  Truck,
+  Box,
+} from "lucide-react";
 import profileImage from "../assets/TVS-LOGO-RGB-300DPI.jpg";
 
 const menuItems = [
@@ -19,8 +26,6 @@ const menuItems = [
         icon: Users,
         href: "/dashboard/solicitudes/clientes-finales",
       },
-      
-      
       {
         label: "Retailers",
         icon: ShoppingBag,
@@ -35,7 +40,6 @@ const menuItems = [
             icon: Box,
             href: "/dashboard/solicitudes/retailers/elektra",
           },
-          
         ],
       },
     ],
@@ -93,6 +97,9 @@ function CustomSidebar() {
     );
   };
 
+  // Recupera el nombre de usuario guardado en localStorage
+  const username = localStorage.getItem("username") || "Nombre del Usuario";
+
   return (
     <aside className="w-64 bg-[#09090b] border-r p-4">
       {/* Sección de Perfil */}
@@ -103,7 +110,7 @@ function CustomSidebar() {
           className="w-12 h-12 rounded-full"
         />
         <div>
-          <p className="font-semibold text-white">Nombre del Usuario</p>
+          <p className="font-semibold text-white">{username}</p>
           <p className="text-sm text-gray-400">Rol o información</p>
         </div>
       </div>

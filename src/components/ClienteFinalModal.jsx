@@ -2,12 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-/**
- * Modal con mayor anchura y overlay más tenue.
- * - DATOS PERSONALES (4 columnas)
- * - DETALLES DE VENTA (2 columnas)
- * Botones con hovers en blanco/rojo/negro, etc.
- */
+
 const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
   const [formData, setFormData] = useState({ ...request });
   const [loading, setLoading] = useState(false);
@@ -44,6 +39,7 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
           status === "approved" ? "aprobada" : "rechazada"
         } correctamente.`
       );
+
       // Actualiza localmente
       setFormData((prev) => ({ ...prev, status }));
       onStatusChange(formData.user_id, status);
@@ -71,12 +67,13 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
         <div className="px-6 py-6">
         </div>
 
-        {/* Contenido principal */}
+
         <div className="px-6 py-6 text-black text-sm">
-          {/* DATOS PERSONALES */}
+
+
           <section className="mb-6">
             <h4 className="text-sm font-bold uppercase mb-3">Datos Personales</h4>
-            {/* "Tabla" en 4 columnas */}
+
             <div className="grid grid-cols-4 gap-x-8 gap-y-4">
               {[
                 ["Nombre", "full_name"],
@@ -112,7 +109,7 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
           {/* DETALLES DE VENTA */}
           <section className="mb-6">
             <h4 className="text-sm font-bold uppercase mb-3">Detalles de Venta</h4>
-            {/* "Tabla" en 2 columnas */}
+
             <div className="grid grid-cols-2 gap-x-8 gap-y-4">
               {[
                 ["Promoción", "promocion"],
@@ -138,9 +135,8 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
             </div>
           </section>
 
-          {/* Sección final: Ver Factura y Botones */}
           <div className="flex items-center justify-between mt-8">
-            {/* Link Factura (ajusta si tu API provee una URL en formData.invoice) */}
+
             <a
               href="#"
               className="text-sm text-[#989898] font-semibold underline hover:no-underline"
@@ -149,7 +145,7 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
             </a>
 
             <div className="flex gap-3">
-              {/* Actualizar: fondo blanco, texto #989898, hover: fondo #989898, texto blanco */}
+              {/* Actualizar: */}
               <button
                 onClick={handleUpdate}
                 disabled={loading}
@@ -164,7 +160,7 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
                 Actualizar
               </button>
 
-              {/* Rechazar: fondo blanco, texto #ff0033, hover: fondo #ff0033, texto blanco */}
+              {/* Rechazar: */}
               <button
                 onClick={() => handleApproveReject('rejected')}
                 disabled={loading}
@@ -179,7 +175,7 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
                 Rechazar
               </button>
 
-              {/* Aprobar: fondo negro, texto blanco, hover: fondo #989898, texto negro */}
+              {/* Aprobar:*/}
               <button
                 onClick={() => handleApproveReject('approved')}
                 disabled={loading}

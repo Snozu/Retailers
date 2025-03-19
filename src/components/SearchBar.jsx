@@ -1,6 +1,6 @@
 // src/components/SearchBar.jsx
 import React from "react"
-import { SearchIcon } from "lucide-react" // Ajusta si usas otro ícono o librería
+import { SearchIcon } from "lucide-react"
 
 const SearchBar = ({ value, onChange, placeholder = "Buscar..." }) => {
   return (
