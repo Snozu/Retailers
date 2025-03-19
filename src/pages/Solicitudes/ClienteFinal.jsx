@@ -1,30 +1,26 @@
-// src/pages/Solicitudes/ClienteFinal.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ClienteFinalTable from "../../components/ClienteFinalTable";
 import SummaryAlerts from "../../components/SolicitudesCard";
 import ClienteFinalModal from "../../components/ClienteFinalModal";
 import SearchBar from "../../components/SearchBar";
-import Pagination from "../../components/Pagination"; // <-- Importamos el nuevo Pagination
+import Pagination from "../../components/Pagination"; 
 
 function ClienteFinal() {
-  // Estados para datos, carga y error
+
   const [allRequests, setAllRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para búsqueda y paginación
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 5;
 
-  // Estados para resumen
   const [totalSolicitudes, setTotalSolicitudes] = useState(0);
   const [totalPendientes, setTotalPendientes] = useState(0);
   const [totalAprobados, setTotalAprobados] = useState(0);
   const [totalRechazados, setTotalRechazados] = useState(0);
 
-  // Estados para el modal
   const [showModal, setShowModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
@@ -95,9 +91,9 @@ function ClienteFinal() {
 
   return (
     <div className="p-6 py-15 text-gray-800">
-      {/* Encabezado + SummaryAlerts en la misma línea */}
+
       <div className="flex items-center justify-between mb-2">
-        {/* Título a la izquierda */}
+
         <div>
           <h2 className="text-4xl font-bold">Cliente Final</h2>
         </div>
