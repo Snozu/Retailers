@@ -1,3 +1,4 @@
+// src/pages/ClienteFinal.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ClienteFinalTable from "../../components/ClienteFinalTable";
@@ -7,7 +8,6 @@ import SearchBar from "../../components/SearchBar";
 import Pagination from "../../components/Pagination"; 
 
 function ClienteFinal() {
-
   const [allRequests, setAllRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -70,11 +70,11 @@ function ClienteFinal() {
     setSelectedRequest(null);
   };
 
-  // Actualiza estatus local
-  const updateLocalStatus = (user_id, newStatus) => {
+  // Callback para actualizar el objeto completo de la solicitud en el estado local
+  const updateLocalData = (updatedRequest) => {
     setAllRequests((prev) => {
       const updated = prev.map((req) =>
-        req.user_id === user_id ? { ...req, status: newStatus } : req
+        req.user_id === updatedRequest.user_id ? updatedRequest : req
       );
       calculateSummary(updated);
       return updated;
@@ -91,14 +91,10 @@ function ClienteFinal() {
 
   return (
     <div className="p-6 py-15 text-gray-800">
-
       <div className="flex items-center justify-between mb-2">
-
         <div>
           <h2 className="text-4xl font-bold">Cliente Final</h2>
         </div>
-
-        {/* Tarjetas de resumen a la derecha */}
         <SummaryAlerts
           total={totalSolicitudes}
           pending={totalPendientes}
@@ -106,10 +102,7 @@ function ClienteFinal() {
           rejected={totalRechazados}
         />
       </div>
-
-      {/* Barra de Búsqueda y Paginación en la misma línea */}
-      <div className="py-8  flex items-center justify-between ">
-        {/* SearchBar ocupa la mitad */}
+      <div className="py-8 flex items-center justify-between">
         <div className="w-1/2 pr-2">
           <SearchBar
             value={searchTerm}
@@ -119,8 +112,6 @@ function ClienteFinal() {
             }}
           />
         </div>
-
-        {/* Paginación ocupa la mitad */}
         <div className="w-1/2 pl-2 flex justify-end">
           <Pagination
             totalPages={totalPages}
@@ -129,16 +120,12 @@ function ClienteFinal() {
           />
         </div>
       </div>
-
-      {/* Tabla */}
       <ClienteFinalTable data={pageData} onShowDetails={handleShowDetails} />
-
-      {/* Modal */}
       {showModal && selectedRequest && (
         <ClienteFinalModal
           request={selectedRequest}
           onClose={handleCloseModal}
-          onStatusChange={updateLocalStatus}
+          onDataUpdate={updateLocalData}
         />
       )}
     </div>

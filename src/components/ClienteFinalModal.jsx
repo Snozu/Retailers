@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
+const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
   const [formData, setFormData] = useState({ ...request });
   const [loading, setLoading] = useState(false);
 
   // Función para transformar los datos del frontend al formato esperado por el backend
   const transformData = (data) => ({
+    // Datos Personales
     user_id: data.user_id,
     nombre_completo: data.full_name,
     correo: data.email,
@@ -25,6 +26,15 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
     modelo: data.modelo,
     anio: data.anio,
     retailer: data.retailer,
+    // Detalles de Venta
+    promocion: data.promocion,
+    email_vendedor: data.email_vendedor,
+    fecha_venta: data.fecha_venta,
+    tipo_persona: data.tipo_persona,
+    vendedor: data.vendedor,
+    tipo_compra: data.tipo_compra,
+    precio_venta: data.precio_venta,
+    origen_venta: data.origen_venta,
   });
 
   const handleChange = (e) => {
@@ -36,11 +46,13 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
     setLoading(true);
     try {
       const apiUrl = import.meta.env.VITE_API_CLIENT_UPDATE;
-      console.log("apiUrl:", apiUrl); // Verifica el valor en consola
+      console.log("apiUrl:", apiUrl);
       // Transformamos los datos antes de enviarlos
       const payload = transformData(formData);
       await axios.post(`${apiUrl}/client-update`, payload);
       alert("Datos actualizados correctamente.");
+      // Se invoca el callback pasando el objeto actualizado
+      onDataUpdate(formData);
       onClose();
     } catch (error) {
       alert("Error al actualizar los datos.");
@@ -62,10 +74,9 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
           status === "approved" ? "aprobada" : "rechazada"
         } correctamente.`
       );
-
-      // Actualiza localmente
-      setFormData((prev) => ({ ...prev, status }));
-      onStatusChange(formData.user_id, status);
+      const updatedData = { ...formData, status };
+      setFormData(updatedData);
+      onDataUpdate(updatedData);
     } catch (error) {
       alert("Error al cambiar el estatus.");
       console.error(error);
@@ -74,21 +85,15 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
   };
 
   return (
-    // Capa oscura de fondo con menor opacidad
     <div className="fixed top-0 left-0 w-full h-full backdrop-blur-xs bg-white/5 bg-opacity-20 flex items-center justify-center z-50">
-      {/* Contenedor del modal con más anchura */}
       <div className="bg-white w-11/12 max-w-6xl rounded relative overflow-auto max-h-[90vh] shadow-sm">
-        {/* Botón para cerrar */}
         <button
           onClick={onClose}
           className="absolute top-4 right-5 text-2xl text-gray-700 hover:text-black font-bold"
         >
           &times;
         </button>
-
-        {/* Encabezado */}
         <div className="px-6 py-6"></div>
-
         <div className="px-6 py-6 text-black text-sm">
           <section className="mb-6">
             <h4 className="text-sm font-bold uppercase mb-3">Datos Personales</h4>
@@ -123,8 +128,6 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
               ))}
             </div>
           </section>
-
-          {/* DETALLES DE VENTA */}
           <section className="mb-6">
             <h4 className="text-sm font-bold uppercase mb-3">Detalles de Venta</h4>
             <div className="grid grid-cols-2 gap-x-8 gap-y-4">
@@ -151,57 +154,35 @@ const ClienteFinalModal = ({ request, onClose, onStatusChange = () => {} }) => {
               ))}
             </div>
           </section>
-
           <div className="flex items-center justify-between mt-8">
+            {/* Enlace "Ver Factura" que utiliza el valor de invoice (si existe) */}
             <a
-              href="#"
+              href={formData.invoice || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm text-[#989898] font-semibold underline hover:no-underline"
             >
               Ver Factura
             </a>
-
             <div className="flex gap-3">
-              {/* Actualizar: */}
               <button
                 onClick={handleUpdate}
                 disabled={loading}
-                className="
-                  bg-white text-[#989898] 
-                  px-12 py-2 rounded-md 
-                  border border-[#989898] 
-                  transition-colors 
-                  hover:bg-[#989898] hover:text-white
-                "
+                className="bg-white text-[#989898] px-12 py-2 rounded-md border border-[#989898] transition-colors hover:bg-[#989898] hover:text-white"
               >
                 Actualizar
               </button>
-
-              {/* Rechazar: */}
               <button
-                onClick={() => handleApproveReject('rejected')}
+                onClick={() => handleApproveReject("rejected")}
                 disabled={loading}
-                className="
-                  bg-white text-[#ff0033] 
-                  px-12 py-2 rounded-md 
-                  border border-[#989898] 
-                  transition-colors 
-                  hover:bg-[#ff0033] hover:text-white
-                "
+                className="bg-white text-[#ff0033] px-12 py-2 rounded-md border border-[#989898] transition-colors hover:bg-[#ff0033] hover:text-white"
               >
                 Rechazar
               </button>
-
-              {/* Aprobar: */}
               <button
-                onClick={() => handleApproveReject('approved')}
+                onClick={() => handleApproveReject("approved")}
                 disabled={loading}
-                className="
-                  bg-black text-white
-                  px-12 py-2 rounded-md
-                  border border-[#989898]
-                  transition-colors
-                  hover:bg-[#989898] hover:text-black
-                "
+                className="bg-black text-white px-12 py-2 rounded-md border border-[#989898] transition-colors hover:bg-[#989898] hover:text-black"
               >
                 Aprobar
               </button>
