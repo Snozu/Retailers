@@ -78,10 +78,9 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
         status,
       });
       alert(
-        `Solicitud ${
-          status === "approved" ? "aprobada" : "rechazada"
-        } correctamente.`
+        `Solicitud ${status === "approved" ? "aprobada" : "rechazada"} correctamente.`
       );
+      // Actualizar el estado local del formulario
       const updatedData = { ...formData, status };
       setFormData(updatedData);
       onDataUpdate(updatedData);
@@ -91,6 +90,7 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
     }
     setLoading(false);
   };
+  
 
   return (
     <div className="fixed top-0 left-0 w-full h-full backdrop-blur-xs bg-white/5 bg-opacity-20 flex items-center justify-center z-50">
