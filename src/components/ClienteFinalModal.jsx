@@ -1,40 +1,49 @@
-// src/components/ClienteFinalModal.jsx
+  // src/components/ClienteFinalModal.jsx
 import React, { useState } from "react";
 import axios from "axios";
 
 const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
-  const [formData, setFormData] = useState({ ...request });
+  // Inicializamos el estado con los valores del request y asignamos los valores fijos para detalles de venta
+  const [formData, setFormData] = useState({
+    ...request,
+    promocion: "otro",                 // Siempre "otro"
+    tipo_compra: "otro crédito",       // Siempre "otro crédito"
+    origen_venta: "Otro",              // Siempre "Otro"
+    especifique: request.retailer || "" // Toma el retailer y lo asigna a "Especifique"
+  });
   const [loading, setLoading] = useState(false);
 
+  
   // Función para transformar los datos del frontend al formato esperado por el backend
   const transformData = (data) => ({
-    // Datos Personales
     user_id: data.user_id,
-    nombre_completo: data.full_name,
-    correo: data.email,
-    telefono: data.phone_number,
-    fecha_nacimiento: data.birthday,
-    calle: data.street,
-    numero_exterior: data.exterior_number,
-    numero_interior: data.interior_number,
-    colonia: data.neighborhood,
-    ciudad: data.city,
-    estado: data.state,
-    codigo_postal: data.zip,
     vin: data.vin,
     invoice: data.invoice,
+    full_name: data.full_name,
+    email: data.email,
+    phone_number: data.phone_number,
+    birthday: data.birthday,
+    street: data.street,
+    exterior_number: data.exterior_number,
+    interior_number: data.interior_number,
+    neighborhood: data.neighborhood,
+    city: data.city,
+    state: data.state,
+    zip: data.zip,
+    status: data.status,
     modelo: data.modelo,
     anio: data.anio,
     retailer: data.retailer,
-    // Detalles de Venta
-    promocion: data.promocion,
+  
+    promocion: data.promocion,       // Fijo en "otro"
     email_vendedor: data.email_vendedor,
     fecha_venta: data.fecha_venta,
     tipo_persona: data.tipo_persona,
     vendedor: data.vendedor,
-    tipo_compra: data.tipo_compra,
+    especifique: data.especifique,   // Será el valor del retailer
+    tipo_compra: data.tipo_compra,   // Fijo en "otro crédito"
     precio_venta: data.precio_venta,
-    origen_venta: data.origen_venta,
+    origen_venta: data.origen_venta  // Fijo en "Otro"
   });
 
   const handleChange = (e) => {
@@ -51,7 +60,6 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
       const payload = transformData(formData);
       await axios.post(`${apiUrl}/client-update`, payload);
       alert("Datos actualizados correctamente.");
-      // Se invoca el callback pasando el objeto actualizado
       onDataUpdate(formData);
       onClose();
     } catch (error) {
@@ -95,6 +103,7 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
         </button>
         <div className="px-6 py-6"></div>
         <div className="px-6 py-6 text-black text-sm">
+          {/* Sección de Datos Personales */}
           <section className="mb-6">
             <h4 className="text-sm font-bold uppercase mb-3">Datos Personales</h4>
             <div className="grid grid-cols-4 gap-x-8 gap-y-4">
@@ -112,7 +121,6 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
                 ["Estado", "state"],
                 ["NIV", "vin"],
                 ["Modelo", "modelo"],
-                ["Retailer", "retailer"],
                 ["Año", "anio"],
               ].map(([label, name, extraClass = ""]) => (
                 <div key={name} className={extraClass}>
@@ -128,19 +136,22 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
               ))}
             </div>
           </section>
+          {/* Sección de Detalles de Venta */}
           <section className="mb-6">
             <h4 className="text-sm font-bold uppercase mb-3">Detalles de Venta</h4>
             <div className="grid grid-cols-2 gap-x-8 gap-y-4">
               {[
-                ["Promoción", "promocion"],
-                ["Email Vendedor", "email_vendedor"],
-                ["Fecha Venta", "fecha_venta"],
-                ["Tipo Persona", "tipo_persona"],
-                ["Vendedor", "vendedor"],
-                ["Tipo Compra", "tipo_compra"],
-                ["Precio Venta", "precio_venta"],
-                ["Origen Venta", "origen_venta"],
-              ].map(([label, name]) => (
+                // Los campos fijos se muestran deshabilitados
+                ["Promoción", "promocion", true],
+                ["Email Vendedor", "email_vendedor", false],
+                ["Fecha Venta", "fecha_venta", false],
+                ["Tipo Persona", "tipo_persona", false],
+                ["Vendedor", "vendedor", false],
+                ["Especifique", "especifique", true],
+                ["Tipo Compra", "tipo_compra", true],
+                ["Precio Venta", "precio_venta", false],
+                ["Origen Venta", "origen_venta", true],
+              ].map(([label, name, isFixed]) => (
                 <div key={name}>
                   <p className="text-xs text-gray-500 mb-1">{label}</p>
                   <input
@@ -148,6 +159,7 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
                     name={name}
                     value={formData[name] || ""}
                     onChange={handleChange}
+                    disabled={isFixed}
                     className="w-full border-b border-gray-200 focus:outline-none px-1 pb-1"
                   />
                 </div>
@@ -155,7 +167,7 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
             </div>
           </section>
           <div className="flex items-center justify-between mt-8">
-            {/* Enlace "Ver Factura" que utiliza el valor de invoice (si existe) */}
+            {/* Enlace para ver la factura */}
             <a
               href={formData.invoice || "#"}
               target="_blank"

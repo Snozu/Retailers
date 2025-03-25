@@ -31,7 +31,7 @@ function ClienteFinal() {
       .get(`${apiUrl}/client-requests`)
       .then((response) => {
         const requests = response.data.requests || [];
-        setAllRequests(requests);
+        setAllRequests([...requests].reverse());
         setLoading(false);
         calculateSummary(requests);
       })
@@ -40,6 +40,7 @@ function ClienteFinal() {
         setLoading(false);
       });
   }, []);
+  
 
   // Calcula totales
   const calculateSummary = (requests) => {

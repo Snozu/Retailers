@@ -38,7 +38,7 @@ function Walmart() {
       .then((response) => {
 
         const requests = response.data.users || [];
-        setAllRequests(requests);
+        setAllRequests([...requests].reverse());
         setLoading(false);
         calculateSummary(requests);
       })
@@ -48,6 +48,7 @@ function Walmart() {
       });
   }, []);
 
+  
   const calculateSummary = (requests) => {
 
     setTotalSolicitudes(requests.length);
