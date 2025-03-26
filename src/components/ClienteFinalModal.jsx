@@ -246,10 +246,13 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
       // 1. Generar la tarjeta y obtener el folio
       const payloadTarjeta = transformDataTarjeta(formData);
       console.log("Payload que se enviará a la API:", payloadTarjeta);
+
+      const apiTarjetaUrl = import.meta.env.VITE_API_TARJETA;
       const response = await axios.post(
-        "https://bdcmotomex.com/MINI_CRM/api/public/index.php/api/tarjeta",
-        payloadTarjeta
-      );
+                       `${apiTarjetaUrl}/api/tarjeta`,
+            payloadTarjeta
+          );
+
       if (response.data && response.data.folioTarjetaRegistro) {
         const folio = response.data.folioTarjetaRegistro;
         toast.info(`Folio generado: ${folio}`, { autoClose: 3000 });
