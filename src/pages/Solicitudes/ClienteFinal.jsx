@@ -1,21 +1,18 @@
 // src/pages/ClienteFinal.jsx
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import ClienteFinalTable from "../../components/ClienteFinalTable";
 import SummaryAlerts from "../../components/SolicitudesCard";
 import ClienteFinalModal from "../../components/ClienteFinalModal";
 import SearchBar from "../../components/SearchBar";
 import Pagination from "../../components/Pagination"; 
+import useClientRequests from "../../hooks/useClientRequests";
 
 function ClienteFinal() {
-  const [allRequests, setAllRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  const { requests: allRequests, setRequests, loading, error } = useClientRequests();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
+  
   const [totalSolicitudes, setTotalSolicitudes] = useState(0);
   const [totalPendientes, setTotalPendientes] = useState(0);
   const [totalAprobados, setTotalAprobados] = useState(0);
@@ -23,24 +20,6 @@ function ClienteFinal() {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
-
-  // Llamada a la API
-  useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    axios
-      .get(`${apiUrl}/client-requests`)
-      .then((response) => {
-        const requests = response.data.requests || [];
-        setAllRequests([...requests].reverse());
-        setLoading(false);
-        calculateSummary(requests);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
-  }, []);
-  
 
   // Calcula totales
   const calculateSummary = (requests) => {
@@ -50,7 +29,12 @@ function ClienteFinal() {
     setTotalRechazados(requests.filter((r) => r.status === "rejected").length);
   };
 
-  // Filtrar
+  // Actualizar totales cada vez que cambien las solicitudes
+  useEffect(() => {
+    calculateSummary(allRequests);
+  }, [allRequests]);
+
+  // Filtrar solicitudes
   const filteredRequests = allRequests.filter((req) => {
     const text = `${req.full_name} ${req.email} ${req.phone_number} ${req.city}`.toLowerCase();
     return text.includes(searchTerm.toLowerCase());
@@ -71,9 +55,9 @@ function ClienteFinal() {
     setSelectedRequest(null);
   };
 
-  // Callback para actualizar el objeto completo de la solicitud en el estado local
+  // Callback para actualizar la solicitud en el estado local
   const updateLocalData = (updatedRequest) => {
-    setAllRequests((prev) => {
+    setRequests((prev) => {
       const updated = prev.map((req) =>
         req.user_id === updatedRequest.user_id ? updatedRequest : req
       );

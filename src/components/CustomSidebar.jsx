@@ -35,11 +35,7 @@ const menuItems = [
             icon: Truck,
             href: "/dashboard/solicitudes/retailers/walmart",
           },
-          {
-            label: "Elektra",
-            icon: Box,
-            href: "/dashboard/solicitudes/retailers/elektra",
-          },
+        
         ],
       },
     ],

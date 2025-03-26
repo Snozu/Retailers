@@ -50,7 +50,7 @@ const tipoPersonaOptions = [
 const tipoCompraOptions = [{ label: "Otro Crédito", value: "Otro Crédito" }];
 const promocionOptions = [{ label: "Otro", value: "Otro" }];
 
-// Objetos de mapeo para enviar los datos fijos con el valor requerido por la API
+// Objetos de mapeo para transformar los valores antes de enviarlos a la API
 const estadosMapping = {
   "Aguascalientes": "AGS",
   "Baja California Norte": "BC",
@@ -109,7 +109,6 @@ const parseNombreApellido = (fullName) => {
   if (parts.length >= 2) {
     return {
       nombre: parts[0],
-      // Se toma el segundo elemento como apellido paterno (ajusta según el formato si es necesario)
       apellidoPaterno: parts[1]
     };
   }
@@ -117,15 +116,14 @@ const parseNombreApellido = (fullName) => {
 };
 
 // Función para transformar los datos para la API de tarjeta.
-// Se asume que data.birthday ya viene en formato YYYY-MM-DD.
 const transformDataTarjeta = (data) => {
   const { nombre, apellidoPaterno } = parseNombreApellido(data.full_name);
   return {
     vcNIV: data.vin,
-    nombre, // Ejemplo: "ERIK"
+    nombre,
     apellidoPaterno: apellidoPaterno || "N/A",
     apellidoMaterno: data.apellidoMaterno || "",
-    fechaNacimiento: data.birthday, // Se mantiene en formato YYYY-MM-DD
+    fechaNacimiento: data.birthday,
     calle: data.street,
     numeroExterior: data.exterior_number,
     numeroInterior: data.interior_number,
@@ -147,7 +145,6 @@ const transformDataTarjeta = (data) => {
 };
 
 // Función para transformar datos para la actualización (client-update)
-// Se agrega el campo "folio" si existe.
 const transformData = (data) => ({
   user_id: data.user_id,
   vin: data.vin,
@@ -176,11 +173,10 @@ const transformData = (data) => ({
   tipo_compra: data.tipo_compra,
   precio_venta: data.precio_venta,
   origen_venta: data.origen_venta,
-  folio: data.folio || "" // Se envía aunque esté en blanco
+  folio: data.folio || ""
 });
 
 const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
-  // Se utiliza optional chaining para evitar errores si request es undefined
   const [formData, setFormData] = useState({
     ...request,
     promocion: "Otro",            // Fijo a "Otro" para Promoción
@@ -199,6 +195,8 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
       await axios.post(`${apiUrl}/client-update`, payload);
       toast.success("Datos actualizados correctamente.", { autoClose: 3000 });
       onDataUpdate(formData);
+      // Puedes cerrar el modal si se actualiza correctamente (opcional)
+      // onClose();
     } catch (error) {
       toast.error("Error al actualizar los datos.", { autoClose: 3000 });
       console.error(error);
@@ -206,7 +204,7 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
     setLoading(false);
   };
 
-  // Función para notificar aprobación o rechazo (ya existente)
+  // Función para notificar aprobación o rechazo
   const handleApproveReject = async (status) => {
     setLoading(true);
     const toastId = toast.loading(
@@ -227,6 +225,8 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
         isLoading: false,
         autoClose: 3000,
       });
+      // Cierra el modal tras aprobación o rechazo
+      onClose();
     } catch (error) {
       console.error(error);
       toast.update(toastId, {
@@ -239,40 +239,36 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
     setLoading(false);
   };
 
-  // Función para generar la tarjeta (obtener el folio) y enviar documentos mediante la API client-update
+  // Función para generar la tarjeta y actualizar datos
   const handleAprobarTarjeta = async () => {
     setLoading(true);
     try {
-      // 1. Generar la tarjeta y obtener el folio
       const payloadTarjeta = transformDataTarjeta(formData);
       console.log("Payload que se enviará a la API:", payloadTarjeta);
 
       const apiTarjetaUrl = import.meta.env.VITE_API_TARJETA;
-      const response = await axios.post(
-                       `${apiTarjetaUrl}/api/tarjeta`,
-            payloadTarjeta
-          );
+      const response = await axios.post(`${apiTarjetaUrl}/api/tarjeta`, payloadTarjeta);
 
       if (response.data && response.data.folioTarjetaRegistro) {
         const folio = response.data.folioTarjetaRegistro;
         toast.info(`Folio generado: ${folio}`, { autoClose: 3000 });
-        
-        // 2. Actualizar el estado del formulario con el folio
+
         const updatedFormData = { ...formData, folio };
         setFormData(updatedFormData);
-        
-        // 3. Actualizar el registro del cliente (client-update)
+
         const apiUrl = import.meta.env.VITE_API_CLIENT_UPDATE;
         const payloadUpdate = transformData(updatedFormData);
         await axios.post(`${apiUrl}/client-update`, payloadUpdate);
-        
-        // 4. Llamar al endpoint update-status para activar el RespondService (notificaciones)
+
         await axios.post(`${apiUrl}/update-status`, {
           user_id: updatedFormData.user_id,
           status: "approved"
         });
         
         toast.success("Documentos enviados correctamente", { autoClose: 3000 });
+        onDataUpdate(updatedFormData);
+        // Cierra el modal tras éxito
+        onClose();
       } else {
         throw new Error("No se generó el folio");
       }
@@ -282,7 +278,6 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
     }
     setLoading(false);
   };
-  
 
   // Manejo de cambios en los inputs
   const handleChange = (e) => {
@@ -324,7 +319,6 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
                     />
                   </div>
                 ))}
-                {/* Select para Estado */}
                 <div className="col-span-1">
                   <p className="text-xs text-gray-500 mb-1">Estado</p>
                   <select
@@ -369,7 +363,6 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
             <section className="mb-6">
               <h4 className="text-sm font-bold uppercase mb-3">Detalles de Venta</h4>
               <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                {/* Select para Tipo de Persona */}
                 <div className="col-span-1">
                   <p className="text-xs text-gray-500 mb-1">Tipo de Persona</p>
                   <select
@@ -386,7 +379,6 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
                     ))}
                   </select>
                 </div>
-                {/* Input para Tipo de Compra (fijo) */}
                 <div className="col-span-1">
                   <p className="text-xs text-gray-500 mb-1">Tipo de Compra</p>
                   <input
@@ -397,7 +389,6 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
                     className="w-full border-b border-gray-200 focus:outline-none px-1 pb-1"
                   />
                 </div>
-                {/* Input para Promoción (fijo) */}
                 <div className="col-span-1">
                   <p className="text-xs text-gray-500 mb-1">Promoción</p>
                   <input
@@ -408,7 +399,6 @@ const ClienteFinalModal = ({ request, onClose, onDataUpdate = () => {} }) => {
                     className="w-full border-b border-gray-200 focus:outline-none px-1 pb-1"
                   />
                 </div>
-                {/* Input para Origen de Venta */}
                 <div className="col-span-1">
                   <p className="text-xs text-gray-500 mb-1">Origen Venta</p>
                   <input
