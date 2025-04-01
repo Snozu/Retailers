@@ -28,7 +28,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.1.0
         with:
           server: ftp://77.37.93.92
-          username: ${{ secrets.RETAILERS.FTP_USERNAME }}   # Asegúrate de definir este secret en GitHub
-          password: ${{ secrets.RETAILERS.FTP_PASSWORD }}   # Asegúrate de definir este secret en GitHub
+          username: ${{ secrets.FTP_USERNAME }}   # Asegúrate de definir este secret en GitHub
+          password: ${{ secrets.FTP_PASSWORD }}   # Asegúrate de definir este secret en GitHub
           local-dir: dist
           server-dir: /public_html/demoday
