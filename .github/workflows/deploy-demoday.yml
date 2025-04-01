@@ -31,4 +31,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}   # Asegúrate de definir este secret en GitHuba
           password: ${{ secrets.FTP_PASSWORD }}   # Asegúrate de definir este secret en GitHub
           local-dir: dist/
-          server-dir: /public_html/demoday
+          server-dir: /public_html/demoday/
