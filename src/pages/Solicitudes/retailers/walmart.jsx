@@ -1,14 +1,13 @@
 // src/pages/Solicitudes/retailers/Walmart.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import ClienteFinalTable from "../../../components/WalmartTable";
+import WalmartTable from "../../../components/WalmartTable";
 import SummaryAlerts from "../../../components/SolicitudesCard"; 
-import ClienteFinalModal from "../../../components/WalmartModal";
+import WalmartModal from "../../../components/WalmartModal";
 import SearchBar from "../../../components/SearchBar";
 import Pagination from "../../../components/Pagination";
 
 function Walmart() {
-
   const [allRequests, setAllRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,19 +24,19 @@ function Walmart() {
   const [showModal, setShowModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
-  // Llamada a la API para Walmart con token en los headers
+  // Llamada a la API para Walmart (se usa el endpoint que devuelve los usuarios completos)
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const token = localStorage.getItem("token"); 
     axios
-      .get(`${apiUrl}/retailers/WMT-001-25/users`, {
+      .get(`${apiUrl}/users/complete`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-
         const requests = response.data.users || [];
+        // Revertimos el array para mostrar el último registro primero
         setAllRequests([...requests].reverse());
         setLoading(false);
         calculateSummary(requests);
@@ -48,17 +47,33 @@ function Walmart() {
       });
   }, []);
 
-  
+  // Calcula los contadores a partir de la estructura de datos recibida
+  // Se usa request.conversation.status_code para determinar el estado
   const calculateSummary = (requests) => {
-
     setTotalSolicitudes(requests.length);
-    setTotalPendientes(requests.filter((r) => r.status === "pending").length);
-    setTotalAprobados(requests.filter((r) => r.status === "approved").length);
-    setTotalRechazados(requests.filter((r) => r.status === "rejected").length);
+    setTotalPendientes(
+      requests.filter(
+        (r) =>
+          r.conversation &&
+          (r.conversation.status_code === "pending" ||
+            r.conversation.status_code === "hold")
+      ).length
+    );
+    setTotalAprobados(
+      requests.filter(
+        (r) => r.conversation && r.conversation.status_code === "approved"
+      ).length
+    );
+    setTotalRechazados(
+      requests.filter(
+        (r) => r.conversation && r.conversation.status_code === "rejected"
+      ).length
+    );
   };
 
+  // Filtrado de solicitudes basado en datos del usuario (ubicados en r.user)
   const filteredRequests = allRequests.filter((req) => {
-    const text = `${req.full_name} ${req.email} ${req.phone_number} ${req.city}`.toLowerCase();
+    const text = `${req.user?.full_name || ""} ${req.user?.email || ""} ${req.user?.phone_number || ""} ${req.user?.city || ""}`.toLowerCase();
     return text.includes(searchTerm.toLowerCase());
   });
 
@@ -76,17 +91,29 @@ function Walmart() {
     setSelectedRequest(null);
   };
 
-  const updateLocalStatus = (user_id, newStatus) => {
+  // Actualiza el estado local al recibir datos actualizados desde el modal.
+  // Se busca el registro por VIN (que es único) y se actualiza el status en conversation.
+  const updateLocalStatus = (updatedData) => {
     setAllRequests((prev) => {
-      const updated = prev.map((req) =>
-        req.user_id === user_id ? { ...req, status: newStatus } : req
-      );
+      const updated = prev.map((req) => {
+        if (req.user?.vin === updatedData.vin) {
+          return {
+            ...req,
+            conversation: {
+              ...req.conversation,
+              status_code: updatedData.status,
+            },
+          };
+        }
+        return req;
+      });
       calculateSummary(updated);
       return updated;
     });
   };
 
-  if (loading) return <div className="p-6 text-center">Cargando datos...</div>;
+  if (loading)
+    return <div className="p-6 text-center">Cargando datos...</div>;
   if (error)
     return (
       <div className="p-6 text-center text-red-500">
@@ -96,7 +123,6 @@ function Walmart() {
 
   return (
     <div className="p-6 text-gray-800">
-
       <div className="flex items-center justify-between mb-2">
         <div>
           <h2 className="text-4xl font-bold">Walmart</h2>
@@ -109,9 +135,8 @@ function Walmart() {
         />
       </div>
 
-    {/* Barra de Búsqueda y Paginación en la misma línea */}
-    <div className="py-8  flex items-center justify-between ">
-        {/* SearchBar ocupa la mitad */}
+      {/* Barra de búsqueda y paginación */}
+      <div className="py-8 flex items-center justify-between">
         <div className="w-1/2 pr-2">
           <SearchBar
             value={searchTerm}
@@ -121,8 +146,6 @@ function Walmart() {
             }}
           />
         </div>
-
-        {/* Paginación ocupa la mitad */}
         <div className="w-1/2 pl-2 flex justify-end">
           <Pagination
             totalPages={totalPages}
@@ -132,13 +155,12 @@ function Walmart() {
         </div>
       </div>
 
-
       {/* Tabla */}
-      <ClienteFinalTable data={pageData} onShowDetails={handleShowDetails} />
+      <WalmartTable data={pageData} onShowDetails={handleShowDetails} />
 
       {/* Modal */}
       {showModal && selectedRequest && (
-        <ClienteFinalModal
+        <WalmartModal
           request={selectedRequest}
           onClose={handleCloseModal}
           onStatusChange={updateLocalStatus}

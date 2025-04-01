@@ -1,15 +1,16 @@
 // src/components/WalmartTable.jsx
 import React from "react";
-import { Button } from "@/components/ui/button"; 
+import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 
 const WalmartTable = ({ data, onShowDetails }) => {
-
-  const renderStatus = (status) => {
+  // Función para renderizar el estatus usando conversation.status_code
+  const renderStatus = (statusCode) => {
     let bgColor = "";
     let text = "";
-    switch (status) {
+    switch (statusCode) {
       case "pending":
+      case "hold":
         bgColor = "bg-yellow-500";
         text = "Pendiente";
         break;
@@ -23,7 +24,7 @@ const WalmartTable = ({ data, onShowDetails }) => {
         break;
       default:
         bgColor = "bg-gray-400";
-        text = "Desconocido";
+        text = statusCode || "Desconocido";
     }
 
     return (
@@ -48,30 +49,33 @@ const WalmartTable = ({ data, onShowDetails }) => {
           </tr>
         </thead>
         <tbody className="text-sm text-gray-700">
-          {data.length > 0 ? (
-            data.map((request, index) => (
-              <tr
-                key={`${request.user_id}-${index}`}
-                className="border-b border-gray-100 hover:bg-gray-50"
-              >
-                <td className="p-4">{request.full_name || "N/A"}</td>
-                <td className="p-4">{request.phone_number || "N/A"}</td>
-                <td className="p-4">{request.email || "N/A"}</td>
-                <td className="p-4">{request.city || "N/A"}</td>
-                <td className="p-4">{renderStatus(request.status)}</td>
-                <td className="p-4 text-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onShowDetails(request)}
-                    className="transition-transform hover:scale-110"
-                  >
-                    <PlusIcon className="w-4 h-4" />
-                    <span className="sr-only">Ver Detalles</span>
-                  </Button>
-                </td>
-              </tr>
-            ))
+          {data && data.length > 0 ? (
+            data.map((item, index) => {
+              const { user, conversation } = item;
+              return (
+                <tr
+                  key={`${user.vin}-${index}`}
+                  className="border-b border-gray-100 hover:bg-gray-50"
+                >
+                  <td className="p-4">{user.full_name || "N/A"}</td>
+                  <td className="p-4">{user.phone_number || "N/A"}</td>
+                  <td className="p-4">{user.email || "N/A"}</td>
+                  <td className="p-4">{user.city || "N/A"}</td>
+                  <td className="p-4">{renderStatus(conversation.status_code)}</td>
+                  <td className="p-4 text-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onShowDetails(item)}
+                      className="transition-transform hover:scale-110"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                      <span className="sr-only">Ver Detalles</span>
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td colSpan="6" className="text-center p-4 text-gray-500">
