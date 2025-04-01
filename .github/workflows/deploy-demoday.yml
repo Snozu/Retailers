@@ -29,7 +29,7 @@ jobs:
         with:
           server: 77.37.93.92         # Elimina "ftp://"}
           protocol: ftp
-          username: ${{ secrets.FTP_USERNAME }}   # Asegúrate de definir este secret en GitHuba
-          password: ${{ secrets.FTP_PASSWORD }}   # Asegúrate de definir este secret en GitHub
+          username: ${{ secrets.FTP_USERNAME }}   
+          password: ${{ secrets.FTP_PASSWORD }} 
           local-dir: dist/
           server-dir: /public_html/demoday/
