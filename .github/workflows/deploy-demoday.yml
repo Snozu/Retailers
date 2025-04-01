@@ -25,11 +25,11 @@ jobs:
         run: npm run build
 
       - name: Desplegar vía FTP a Hostinger
-  uses: SamKirkland/FTP-Deploy-Action@v4.1.0
-  with:
-    server: 77.37.93.92         # Elimina "ftp://"
-    protocol: ftp              # Opcional: especifica el protocolo (ftp o ftps)
-    username: ${{ secrets.FTP_USERNAME }}
-    password: ${{ secrets.FTP_PASSWORD }}
-    local-dir: dist/
-    server-dir: /public_html/demoday/
+        uses: SamKirkland/FTP-Deploy-Action@v4.1.0
+        with:
+          server: 77.37.93.92         # Elimina "ftp://"}
+          protocol: ftp
+          username: ${{ secrets.FTP_USERNAME }}   # Asegúrate de definir este secret en GitHuba
+          password: ${{ secrets.FTP_PASSWORD }}   # Asegúrate de definir este secret en GitHub
+          local-dir: dist/
+          server-dir: /public_html/demoday/
