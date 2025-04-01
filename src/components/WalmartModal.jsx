@@ -209,7 +209,7 @@ const WalmartModal = ({ request, onClose, onStatusChange = () => {} }) => {
             </section>
             {/* Sección de Detalles de Venta */}
             <section className="mb-6">
-              <h4 className="text-sm font-bold uppercase mb-3">Detalles de Venta</h4>
+              <h4 className="text-sm font-bold uppercase mb-3">Detalles de Ventassss</h4>
               <div className="grid grid-cols-2 gap-x-8 gap-y-4">
                 <div className="col-span-1">
                   <p className="text-xs text-gray-500 mb-1">Tipo de Persona</p>
