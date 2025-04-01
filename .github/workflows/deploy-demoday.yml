@@ -26,11 +26,11 @@ jobs:
         # Vite genera por defecto la build en la carpeta "dist"
 
       - name: Desplegar vía FTP a Hostinger
-        uses: SamKirkland/FTP-Deploy-Action@v4.1.0
-        with:
-        server: ftp://77.37.93.92        # Cambiar 'ftp-server' -> 'server'
-        username: ${{ secrets.FTP_USERNAME }}  # Cambiar 'ftp-username' -> 'username'
-        password: ${{ secrets.FTP_PASSWORD }}  # Cambiar 'ftp-password' -> 'password'
-        local-dir: dist
-        server-dir: /public_html/demoday
+  uses: SamKirkland/FTP-Deploy-Action@v4.1.0
+  with:
+    server: ftp://77.37.93.92        # Cambiar 'ftp-server' -> 'server'
+    username: ${{ secrets.FTP_USERNAME }}  # Cambiar 'ftp-username' -> 'username'
+    password: ${{ secrets.FTP_PASSWORD }}  # Cambiar 'ftp-password' -> 'password'
+    local-dir: dist
+    server-dir: /public_html/demoday
 
