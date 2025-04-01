@@ -1,0 +1,35 @@
+name: Deploy a Demoday
+
+on:
+  push:
+    branches:
+      - main  # Se activará en la rama principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'latest'  # Se usa la última versión disponible
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Generar Build (Vite)
+        run: npm run build
+        # Vite genera por defecto la build en la carpeta "dist"
+
+      - name: Desplegar vía FTP a Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.1.0
+        with:
+          ftp-server: ftp://77.37.93.92
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: dist
+          server-dir: /public_html/demoday  # La carpeta destino en Hostinger
