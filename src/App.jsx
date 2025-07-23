@@ -1,9 +1,9 @@
+// App.jsx
 import './App.css'
 import { BrowserRouter } from 'react-router-dom';
 import AppRouter from './routes/AppRouter';
 
 function App() {
-
   return (
     <BrowserRouter>
       <AppRouter />
@@ -11,5 +11,4 @@ function App() {
   );
 }
 
-
-export default App
+export default App;
