@@ -74,7 +74,7 @@ function CustomSidebar() {
               <div className="flex items-center justify-between">
                 <Link
                   to={item.href || "#"}
-                  className={`flex items-center space-x-3 p-2 rounded-md ${hasChildren ? 'text-gray-200' : 'text-gray-300'} ${depth === 0 ? 'font-medium' : 'font-normal'}`}
+                  className={`flex items-center space-x-3 p-2 rounded-md ${hasChildren ? 'text-gray-200' : 'text-gray-300'} ${depth === 0 ? 'font-medium' : 'font-normal'} cursor-pointer`}
                   onClick={(e) => {
                     if (hasChildren) {
                       e.preventDefault();
@@ -88,7 +88,7 @@ function CustomSidebar() {
                 {hasChildren && (
                   <button
                     onClick={() => toggleExpand(item.label)}
-                    className="p-1 text-gray-400 rounded-full"
+                    className="p-1 text-gray-400 rounded-full cursor-pointer"
                   >
                     <span className="text-xs">{expanded[item.label] ? "−" : "+"}</span>
                   </button>
@@ -136,7 +136,7 @@ function CustomSidebar() {
       <div className="mt-auto pt-4 border-t border-gray-700">
         <button 
           onClick={handleLogout}
-          className="flex items-center justify-center space-x-2 p-2 w-full rounded-md bg-transparent text-white font-medium text-sm"
+          className="flex items-center justify-center space-x-2 p-2 w-full rounded-md bg-transparent text-white font-medium text-sm cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
           <span>Cerrar Sesión</span>
