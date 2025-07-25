@@ -1,11 +1,14 @@
-# React + Vite
+# Retailers - Aplicación de Gestión de Solicitudes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Esta aplicación web está diseñada para gestionar solicitudes de retailers, proporcionando una interfaz intuitiva y responsiva para visualizar, filtrar y administrar diferentes tipos de solicitudes.
 
-Currently, two official plugins are available:
+## Características Principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Interfaz Responsiva**: Diseño adaptable para dispositivos móviles y de escritorio
+- **Animaciones Interactivas**: Implementación de animaciones de contador y efectos visuales
+- **Filtrado Dinámico**: Capacidad para filtrar solicitudes por estado (pendientes, aprobadas, rechazadas)
+- **Modales Detallados**: Visualización de información detallada de cada solicitud
+- **Paginación Optimizada**: Navegación eficiente entre grandes conjuntos de datos
 
 ## Expanding the ESLint configuration
 
