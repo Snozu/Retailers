@@ -74,7 +74,7 @@ function CustomSidebar() {
               <div className="flex items-center justify-between">
                 <Link
                   to={item.href || "#"}
-                  className={`group flex items-center space-x-3 p-2 rounded-md transition-all duration-300 ${hasChildren ? 'text-gray-200' : 'text-gray-300'} ${depth === 0 ? 'font-medium' : 'font-normal'} hover:bg-gray-800 hover:text-white`}
+                  className={`flex items-center space-x-3 p-2 rounded-md ${hasChildren ? 'text-gray-200' : 'text-gray-300'} ${depth === 0 ? 'font-medium' : 'font-normal'}`}
                   onClick={(e) => {
                     if (hasChildren) {
                       e.preventDefault();
@@ -82,15 +82,15 @@ function CustomSidebar() {
                     }
                   }}
                 >
-                  {Icon && <Icon className={`transition-transform duration-300 group-hover:scale-110 ${depth === 0 ? 'w-5 h-5' : 'w-4 h-4'}`} />}
-                  <span className={`transition-all duration-300 group-hover:translate-x-1 ${depth === 0 ? 'text-sm' : 'text-xs'}`}>{item.label}</span>
+                  {Icon && <Icon className={`${depth === 0 ? 'w-5 h-5' : 'w-4 h-4'}`} />}
+                  <span className={`${depth === 0 ? 'text-sm' : 'text-xs'}`}>{item.label}</span>
                 </Link>
                 {hasChildren && (
                   <button
                     onClick={() => toggleExpand(item.label)}
-                    className="p-1 text-gray-400 hover:text-white rounded-full hover:bg-gray-700 transition-all duration-300 hover:scale-110"
+                    className="p-1 text-gray-400 rounded-full"
                   >
-                    <span className="text-xs transform transition-transform duration-300">{expanded[item.label] ? "−" : "+"}</span>
+                    <span className="text-xs">{expanded[item.label] ? "−" : "+"}</span>
                   </button>
                 )}
               </div>
@@ -127,7 +127,7 @@ function CustomSidebar() {
       </div>
 
       {/* Menú de Navegación */}
-      <div className="border-t border-gray-700 pt-4 flex-grow">
+      <div className="pt-4 flex-grow">
         <h3 className="text-xs uppercase text-gray-400 font-semibold mb-3 tracking-wider">Menú Principal</h3>
         <nav className="space-y-1">{renderMenuItems(menuItems)}</nav>
       </div>
@@ -136,10 +136,10 @@ function CustomSidebar() {
       <div className="mt-auto pt-4 border-t border-gray-700">
         <button 
           onClick={handleLogout}
-          className="group flex items-center justify-center space-x-2 p-2 w-full rounded-md bg-transparent hover:bg-gray-800 transition-all duration-300 text-white font-medium text-sm"
+          className="flex items-center justify-center space-x-2 p-2 w-full rounded-md bg-transparent text-white font-medium text-sm"
         >
-          <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-          <span className="group-hover:text-gray-300 transition-colors duration-300">Cerrar Sesión</span>
+          <LogOut className="w-4 h-4" />
+          <span>Cerrar Sesión</span>
         </button>
       </div>
     </aside>
