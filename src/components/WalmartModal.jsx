@@ -136,20 +136,20 @@ const WalmartModal = ({ request, onClose, onStatusChange = () => {} }) => {
   return (
     <>
       <ToastContainer position="bottom-right" />
-      <div className="fixed top-0 left-0 w-full h-full backdrop-blur-xs bg-white/5 bg-opacity-20 flex items-center justify-center z-50">
-        <div className="bg-white w-11/12 max-w-6xl rounded relative overflow-auto max-h-[90vh] shadow-sm">
+      <div className="fixed top-0 left-0 w-full h-full backdrop-blur-xs bg-white/5 bg-opacity-20 flex items-center justify-center z-50 p-2 sm:p-4">
+        <div className="bg-white w-full max-w-6xl rounded relative overflow-auto max-h-[90vh] shadow-sm">
           <button
             onClick={onClose}
-            className="absolute top-4 right-5 text-2xl text-gray-700 hover:text-black font-bold"
+            className="absolute top-2 sm:top-4 right-2 sm:right-5 text-xl sm:text-2xl text-gray-700 hover:text-black font-bold z-10"
           >
             &times;
           </button>
-          <div className="px-6 py-6"></div>
-          <div className="px-6 py-6 text-black text-sm">
+          <div className="px-3 sm:px-6 py-3 sm:py-6"></div>
+          <div className="px-3 sm:px-6 py-3 sm:py-6 text-black text-sm">
             {/* Sección de Datos Personales */}
-            <section className="mb-6">
-              <h4 className="text-sm font-bold uppercase mb-3">Datos Personales</h4>
-              <div className="grid grid-cols-4 gap-x-8 gap-y-4">
+            <section className="mb-4 sm:mb-6">
+              <h4 className="text-sm font-bold uppercase mb-2 sm:mb-3">Datos Personales</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 sm:gap-x-8 gap-y-3 sm:gap-y-4">
                 {[
                   ["Nombre", "full_name"],
                   ["Teléfono", "phone_number"],
@@ -208,9 +208,9 @@ const WalmartModal = ({ request, onClose, onStatusChange = () => {} }) => {
               </div>
             </section>
             {/* Sección de Detalles de Venta */}
-            <section className="mb-6">
-              <h4 className="text-sm font-bold uppercase mb-3">Detalles de Ventassss</h4>
-              <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+            <section className="mb-4 sm:mb-6">
+              <h4 className="text-sm font-bold uppercase mb-2 sm:mb-3">Detalles de Venta</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-3 sm:gap-y-4">
                 <div className="col-span-1">
                   <p className="text-xs text-gray-500 mb-1">Tipo de Persona</p>
                   <select
@@ -277,28 +277,28 @@ const WalmartModal = ({ request, onClose, onStatusChange = () => {} }) => {
                 ))}
               </div>
             </section>
-            <div className="flex items-center justify-between mt-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-6 sm:mt-8 gap-4 sm:gap-0">
               <a
                 href={formData.invoice || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-[#989898] font-semibold underline hover:no-underline"
+                className="text-sm text-[#989898] font-semibold underline hover:no-underline mb-2 sm:mb-0"
               >
                 Ver Factura
               </a>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2 sm:gap-3 w-full sm:w-auto justify-end">
                 {/* En Walmart no se usa el update separado */}
                 <button
                   onClick={() => handleApproveReject("rejected")}
                   disabled={loading}
-                  className="bg-white text-[#ff0033] px-12 py-2 rounded-md border border-[#989898] transition-colors hover:bg-[#ff0033] hover:text-white"
+                  className="bg-white text-[#ff0033] px-4 sm:px-8 md:px-12 py-2 text-xs sm:text-sm rounded-md border border-[#989898] transition-colors hover:bg-[#ff0033] hover:text-white"
                 >
                   Rechazar
                 </button>
                 <button
                   onClick={handleAprobarTarjeta}
                   disabled={loading}
-                  className="bg-black text-white px-12 py-2 rounded-md border border-[#989898] transition-colors hover:bg-[#989898] hover:text-black"
+                  className="bg-black text-white px-4 sm:px-8 md:px-12 py-2 text-xs sm:text-sm rounded-md border border-[#989898] transition-colors hover:bg-[#989898] hover:text-black"
                 >
                   Aprobar y Generar Tarjeta
                 </button>

@@ -4,7 +4,7 @@ import { SearchIcon } from "lucide-react"
 
 const SearchBar = ({ value, onChange, placeholder = "Buscar..." }) => {
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center w-full">
       <SearchIcon className="absolute left-3 text-gray-400 w-4 h-4" />
       <input
         type="text"

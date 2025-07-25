@@ -36,55 +36,59 @@ const WalmartTable = ({ data, onShowDetails }) => {
   };
 
   return (
-    <div className="bg-white border-gray-200 overflow-hidden">
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className="border-gray-200 text-sm text-gray-600 bg-gray-50">
-            <th className="p-4">Nombre Completo</th>
-            <th className="p-4">Celular</th>
-            <th className="p-4">Email</th>
-            <th className="p-4">Ciudad</th>
-            <th className="p-4">Estatus</th>
-            <th className="p-4 text-center">Información</th>
-          </tr>
-        </thead>
-        <tbody className="text-sm text-gray-700">
-          {data && data.length > 0 ? (
-            data.map((item, index) => {
-              const { user, conversation } = item;
-              return (
-                <tr
-                  key={`${user.vin}-${index}`}
-                  className="border-b border-gray-100 hover:bg-gray-50"
-                >
-                  <td className="p-4">{user.full_name || "N/A"}</td>
-                  <td className="p-4">{user.phone_number || "N/A"}</td>
-                  <td className="p-4">{user.email || "N/A"}</td>
-                  <td className="p-4">{user.city || "N/A"}</td>
-                  <td className="p-4">{renderStatus(conversation.status_code)}</td>
-                  <td className="p-4 text-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onShowDetails(item)}
-                      className="transition-transform hover:scale-110"
+    <div className="bg-white border-gray-200 overflow-x-auto">
+      <div className="min-w-full inline-block align-middle">
+        <div className="overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr className="border-gray-200 text-xs sm:text-sm text-gray-600 bg-gray-50">
+                <th className="py-3 px-2 sm:px-4 font-semibold">Nombre Completo</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold hidden sm:table-cell">Celular</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold hidden md:table-cell">Email</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold hidden md:table-cell">Ciudad</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold">Estatus</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold text-center">Info</th>
+              </tr>
+            </thead>
+            <tbody className="text-xs sm:text-sm text-gray-700 divide-y divide-gray-200">
+              {data && data.length > 0 ? (
+                data.map((item, index) => {
+                  const { user, conversation } = item;
+                  return (
+                    <tr
+                      key={`${user.vin}-${index}`}
+                      className="border-b border-gray-100 hover:bg-gray-50"
                     >
-                      <PlusIcon className="w-4 h-4" />
-                      <span className="sr-only">Ver Detalles</span>
-                    </Button>
+                      <td className="py-3 px-2 sm:px-4 truncate max-w-[120px] sm:max-w-none">{user.full_name || "N/A"}</td>
+                      <td className="py-3 px-2 sm:px-4 hidden sm:table-cell">{user.phone_number || "N/A"}</td>
+                      <td className="py-3 px-2 sm:px-4 hidden md:table-cell truncate max-w-[150px] lg:max-w-none">{user.email || "N/A"}</td>
+                      <td className="py-3 px-2 sm:px-4 hidden md:table-cell">{user.city || "N/A"}</td>
+                      <td className="py-3 px-2 sm:px-4">{renderStatus(conversation.status_code)}</td>
+                      <td className="py-3 px-2 sm:px-4 text-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => onShowDetails(item)}
+                          className="transition-transform hover:scale-110"
+                        >
+                          <PlusIcon className="w-4 h-4" />
+                          <span className="sr-only">Ver Detalles</span>
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center p-4 text-gray-500">
+                    No hay solicitudes disponibles.
                   </td>
                 </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td colSpan="6" className="text-center p-4 text-gray-500">
-                No hay solicitudes disponibles.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

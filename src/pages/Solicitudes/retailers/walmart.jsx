@@ -23,6 +23,9 @@ function Walmart() {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  
+  // Estado para el filtro de tarjetas
+  const [statusFilter, setStatusFilter] = useState(null);
 
   // Llamada a la API para Walmart (se usa el endpoint que devuelve los usuarios completos)
   useEffect(() => {
@@ -71,10 +74,29 @@ function Walmart() {
     );
   };
 
-  // Filtrado de solicitudes basado en datos del usuario (ubicados en r.user)
+  // Manejar cambio de filtro por tarjetas
+  const handleFilterChange = (filter) => {
+    setStatusFilter(filter);
+    setCurrentPage(1); // Resetear a la primera página al cambiar el filtro
+  };
+
+  // Filtrado de solicitudes basado en datos del usuario (ubicados en r.user) y el filtro de estado
   const filteredRequests = allRequests.filter((req) => {
+    // Filtro por texto de búsqueda
     const text = `${req.user?.full_name || ""} ${req.user?.email || ""} ${req.user?.phone_number || ""} ${req.user?.city || ""}`.toLowerCase();
-    return text.includes(searchTerm.toLowerCase());
+    const matchesSearch = text.includes(searchTerm.toLowerCase());
+    
+    // Filtro por estado
+    let matchesStatus = true;
+    if (statusFilter) {
+      if (statusFilter === 'pending') {
+        matchesStatus = req.conversation && (req.conversation.status_code === 'pending' || req.conversation.status_code === 'hold');
+      } else {
+        matchesStatus = req.conversation && req.conversation.status_code === statusFilter;
+      }
+    }
+    
+    return matchesSearch && matchesStatus;
   });
 
   const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
@@ -122,22 +144,21 @@ function Walmart() {
     );
 
   return (
-    <div className="p-6 text-gray-800">
-      <div className="flex items-center justify-between mb-2">
-        <div>
-          <h2 className="text-4xl font-bold">Walmart</h2>
+    <div className="p-4 sm:p-6 text-gray-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div className="mb-4 sm:mb-0">
+          <h2 className="text-3xl sm:text-4xl font-bold">Walmart</h2>
         </div>
         <SummaryAlerts
           total={totalSolicitudes}
           pending={totalPendientes}
           approved={totalAprobados}
           rejected={totalRechazados}
+          onFilterChange={handleFilterChange}
         />
       </div>
-
-      {/* Barra de búsqueda y paginación */}
-      <div className="py-8 flex items-center justify-between">
-        <div className="w-1/2 pr-2">
+      <div className="py-4 sm:py-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-0 sm:justify-between">
+        <div className="w-full sm:w-1/2 sm:pr-2">
           <SearchBar
             value={searchTerm}
             onChange={(e) => {
@@ -146,7 +167,7 @@ function Walmart() {
             }}
           />
         </div>
-        <div className="w-1/2 pl-2 flex justify-end">
+        <div className="w-full sm:w-1/2 sm:pl-2 flex justify-center sm:justify-end">
           <Pagination
             totalPages={totalPages}
             currentPage={currentPage}

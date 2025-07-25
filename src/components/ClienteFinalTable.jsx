@@ -35,52 +35,56 @@ const ClienteFinalTable = ({ data, onShowDetails }) => {
   };
 
   return (
-    <div className="bg-white border-gray-200 overflow-hidden">
-      <table className="w-full text-left border-collapse">
-        <thead>
-          <tr className="border-gray-200 text-sm text-gray-600 bg-gray-50">
-            <th className="py-3 px-4 font-semibold">Nombre Completo</th>
-            <th className="py-3 px-4 font-semibold">Celular</th>
-            <th className="py-3 px-4 font-semibold">Email</th>
-            <th className="py-3 px-4 font-semibold">Ciudad</th>
-            <th className="py-3 px-4 font-semibold">Estatus</th>
-            <th className="py-3 px-4 font-semibold text-center">Información</th>
-          </tr>
-        </thead>
-        <tbody className="text-sm text-gray-700">
-          {data.length > 0 ? (
-            data.map((request, index) => (
-              <tr
-                key={`${request.user_id}-${index}`}
-                className="border-b border-gray-100 hover:bg-gray-50"
-              >
-                <td className="py-3 px-4">{request.full_name || "N/A"}</td>
-                <td className="py-3 px-4">{request.phone_number || "N/A"}</td>
-                <td className="py-3 px-4">{request.email || "N/A"}</td>
-                <td className="py-3 px-4">{request.city || "N/A"}</td>
-                <td className="py-3 px-4">{renderStatus(request.status)}</td>
-                <td className="py-3 px-4 text-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onShowDetails(request)}
-                    className="transition-transform hover:scale-110"
-                  >
-                    <PlusIcon className="w-4 h-4" />
-                    <span className="sr-only">Ver Detalles</span>
-                  </Button>
-                </td>
+    <div className="bg-white border-gray-200 overflow-x-auto">
+      <div className="min-w-full inline-block align-middle">
+        <div className="overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr className="border-gray-200 text-xs sm:text-sm text-gray-600 bg-gray-50">
+                <th className="py-3 px-2 sm:px-4 font-semibold">Nombre Completo</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold hidden sm:table-cell">Celular</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold hidden md:table-cell">Email</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold hidden md:table-cell">Ciudad</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold">Estatus</th>
+                <th className="py-3 px-2 sm:px-4 font-semibold text-center">Info</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" className="text-center p-4 text-gray-500">
-                No hay solicitudes disponibles.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody className="text-xs sm:text-sm text-gray-700 divide-y divide-gray-200">
+              {data.length > 0 ? (
+                data.map((request, index) => (
+                  <tr
+                    key={`${request.user_id}-${index}`}
+                    className="border-b border-gray-100 hover:bg-gray-50"
+                  >
+                    <td className="py-3 px-2 sm:px-4 truncate max-w-[120px] sm:max-w-none">{request.full_name || "N/A"}</td>
+                    <td className="py-3 px-2 sm:px-4 hidden sm:table-cell">{request.phone_number || "N/A"}</td>
+                    <td className="py-3 px-2 sm:px-4 hidden md:table-cell truncate max-w-[150px] lg:max-w-none">{request.email || "N/A"}</td>
+                    <td className="py-3 px-2 sm:px-4 hidden md:table-cell">{request.city || "N/A"}</td>
+                    <td className="py-3 px-2 sm:px-4">{renderStatus(request.status)}</td>
+                    <td className="py-3 px-2 sm:px-4 text-center">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onShowDetails(request)}
+                        className="transition-transform hover:scale-110"
+                      >
+                        <PlusIcon className="w-4 h-4" />
+                        <span className="sr-only">Ver Detalles</span>
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center p-4 text-gray-500">
+                    No hay solicitudes disponibles.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

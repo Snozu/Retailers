@@ -34,10 +34,27 @@ function ClienteFinal() {
     calculateSummary(allRequests);
   }, [allRequests]);
 
-  // Filtrar solicitudes
+  // Estado para el filtro de tarjetas
+  const [statusFilter, setStatusFilter] = useState(null);
+
+  // Manejar cambio de filtro por tarjetas
+  const handleFilterChange = (filter) => {
+    setStatusFilter(filter);
+    setCurrentPage(1); // Resetear a la primera página al cambiar el filtro
+  };
+
+  // Filtrar solicitudes por búsqueda y estado
   const filteredRequests = allRequests.filter((req) => {
     const text = `${req.full_name} ${req.email} ${req.phone_number} ${req.city}`.toLowerCase();
-    return text.includes(searchTerm.toLowerCase());
+    const matchesSearch = text.includes(searchTerm.toLowerCase());
+    
+    // Aplicar filtro por estado si está activo
+    if (statusFilter === 'all') return matchesSearch;
+    if (statusFilter === 'pending') return matchesSearch && req.status === 'pending';
+    if (statusFilter === 'approved') return matchesSearch && req.status === 'approved';
+    if (statusFilter === 'rejected') return matchesSearch && req.status === 'rejected';
+    
+    return matchesSearch; // Si no hay filtro activo
   });
 
   // Paginación
@@ -75,20 +92,21 @@ function ClienteFinal() {
     );
 
   return (
-    <div className="p-6 py-15 text-gray-800">
-      <div className="flex items-center justify-between mb-2">
-        <div>
-          <h2 className="text-4xl font-bold">Cliente Final</h2>
+    <div className="p-4 sm:p-6 text-gray-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div className="mb-4 sm:mb-0">
+          <h2 className="text-3xl sm:text-4xl font-bold">Cliente Final</h2>
         </div>
         <SummaryAlerts
           total={totalSolicitudes}
           pending={totalPendientes}
           approved={totalAprobados}
           rejected={totalRechazados}
+          onFilterChange={handleFilterChange}
         />
       </div>
-      <div className="py-8 flex items-center justify-between">
-        <div className="w-1/2 pr-2">
+      <div className="py-4 sm:py-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-0 sm:justify-between">
+        <div className="w-full sm:w-1/2 sm:pr-2">
           <SearchBar
             value={searchTerm}
             onChange={(e) => {
@@ -97,7 +115,7 @@ function ClienteFinal() {
             }}
           />
         </div>
-        <div className="w-1/2 pl-2 flex justify-end">
+        <div className="w-full sm:w-1/2 sm:pl-2 flex justify-center sm:justify-end">
           <Pagination
             totalPages={totalPages}
             currentPage={currentPage}
